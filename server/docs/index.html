@@ -2,10 +2,33 @@
 
 <head>
     <title>UI Playground</title>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
+    <script>
+        console.log(document.readyState);
+        document.addEventListener('readystatechange', (event) => {
+            console.log(`readystatechange @ ${new Date()}`);
+            window.recorder.push(`readystatechange @ ${new Date()}`);
+        });
+        window.addEventListener('DOMContentLoaded', (event) => {
+            console.log(`DOMContentLoaded Ready @ ${new Date()}`);
+            window.recorder.push(`DOMContentLoaded Ready @ ${new Date()}`);
+        });
+        window.addEventListener('load', (event) => {
+            console.log('page is fully loaded');
+        });
+    </script>
+
+    <!-- if script is not important for page display, put defer in header tag -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
     <script src="https://unpkg.com/vue-router@2.0.0"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+    <!-- <script>window.recorder = [];</script>
+    <script>console.log("start @" + new Date()); window.recorder.push("start @" + new Date());</script>
+    <script src="http://localhost:8888/api/verboser.js?v=1&delay=0" defer></script>
+    <script src="http://localhost:8888/api/verboser.js?v=2&delay=2000" defer></script>
+    <script src="http://localhost:8888/api/verboser.js?v=3&delay=1000" defer></script>
+    <script>console.log("intermediate @" + new Date()); window.recorder.push("intermediate @" + new Date());</script>
+    <script src="http://localhost:8888/api/verboser.js?v=4&delay=5000" defer></script> -->
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -37,13 +60,19 @@
     </div>
 </body>
 
+<!-- if script important for page display, put them under the body: body to display spinner -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
+<script src="https://unpkg.com/vue-router@2.0.0"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>window.recorder = [];</script>
 <script>console.log("start @" + new Date()); window.recorder.push("start @" + new Date());</script>
-<script src="http://localhost:8888/api/verboser.js?v=1&delay=3000"></script>
+<script src="http://localhost:8888/api/verboser.js?v=1&delay=0"></script>
 <script src="http://localhost:8888/api/verboser.js?v=2&delay=2000"></script>
 <script src="http://localhost:8888/api/verboser.js?v=3&delay=1000"></script>
 <script>console.log("intermediate @" + new Date()); window.recorder.push("intermediate @" + new Date());</script>
-<script src="http://localhost:8888/api/verboser.js?v=4&delay=5000"></script>
+<script src="http://localhost:8888/api/verboser.js?v=4&delay=5000"></script> -->
+
 <!-- 
     All external js files exist as js files. This way we have eliminated the use of 
     vue-http-loader. We could turn them to Vue components and use vue-http-loader to compile Vue files.
@@ -265,18 +294,30 @@
         base: window.location.pathname.startsWith("/verboser") ? "/verboser" : "/"
     });
 
+    var app = new Vue({
+        el: "#app",
+        router: router,
+        data() {
+            return {};
+        },
+        methods: {
+        },
+    });
+
     $(document).ready(function () {
 
-        var app = new Vue({
-            el: "#app",
-            router: router,
-            data() {
-                return {};
-            },
-            methods: {
-            },
-        });
-
+        // to simulate render stalling effect using synchronous ajax
+        // for(var i = 0; i < 5; i++) {
+        //     $.ajax({
+        //         url: `http://localhost:8888/api/verboser.js?delay=1000`,
+        //         async: false, // blocks rendering
+        //         cache: false,
+        //         dataType: "script",
+        //         error: function (err) {
+        //             reject(err)
+        //         }
+        //     });
+        // }
     });
 
     $(document).ready(function () {
@@ -289,21 +330,5 @@
         document.getElementById('spinner').style.display = 'none';
     }
 
-    // function getUserJs(delay) {
-    //     return new Promise((resolve, reject) => {
-    //         $.ajax({
-    //             url: `http://localhost:8888/api/user.js?delay=${delay}`,
-    //             async: false, //blocks window close,
-    //             cache: true,
-    //             dataType: "script",
-    //             error: function (err) {
-    //                 reject(err)
-    //             }
-    //         });
-    //     })
-    // }
-
 </script>
-</body>
-
 </html>
