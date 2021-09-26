@@ -2,6 +2,7 @@ const express = require('express');
 const cfg = require('./config');
 const cors = require('cors');
 const axios = require('axios');
+var path = require('path');
 
 module.exports = () => {
 
@@ -22,7 +23,11 @@ module.exports = () => {
 
     app.use('/api', router);
 
-    app.use(express.static("docs"));
+    //app.use(express.static("docs"));
+
+    app.get('*', function(req, res) {
+        res.sendFile(path.join(path.join(__dirname, 'docs'), 'index.html'));
+    });
 
     app.use((request, response, next) => {
 

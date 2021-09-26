@@ -21,10 +21,10 @@ verbose-4 @ Sun Aug 08 2021 22:28:54
 Document Ready @ Sun Aug 08 2021 22:28:54
 ```
 
-## Good Readings
+### Good Readings
 - [Async|Defer](https://flaviocopes.com/javascript-async-defer/#no-defer-or-async-in-the-head)
 
-## Important DOM Events
+### Important DOM Events
 - `readystatechange` aka domInteractive event, when DOM is ready to serve
 - `DOMContentLoaded` event is ~= `${document}.ready`, it represents the html content are fully loaded into the dom tree, it might or might no inclusive of the dependent link resources
 - `Load` on the other hand indicating all resources are fully download and executed
@@ -37,3 +37,12 @@ Document Ready @ Sun Aug 08 2021 22:28:54
    - progress bar rendering on body
    - script should be place under body tag
    - Progress bar be removed on `DOMContentLoaded` or `Load` event.
+
+## Dom Event Listener
+- only can receive event when the listener is setup before the event emission
+
+## Window location vs Orign
+- if the redirect url is same origin, it will run all the subsequent executables before the redirection
+   - inclusive of http redirection E.g. `localhost:8888 -> redirection.com[different origin] (return 302 to localhost:8888[same origin)` will be treated as same origin handling.
+   - this technique is used in `oidc-client-js` to perform signout redirect, code from promise will be executed if the redirected url is the same origin 
+- if the redirect url is different origin, it will interrupt whenever the redirection is ready

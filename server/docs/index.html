@@ -50,7 +50,7 @@
 </head>
 
 <body>
-    <div class="overlay d-flex justify-content-center align-items-center">
+    <div id="overlay" class="overlay d-flex justify-content-center align-items-center">
         <div class="spinner-border text-primary" id="spinner" role="status">
             <span class="sr-only">Loading...</span>
         </div>
@@ -66,7 +66,7 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>window.recorder = [];</script>
-<script>console.log("start @" + new Date()); window.recorder.push("start @" + new Date());</script>
+<!-- <script>console.log("start @" + new Date()); window.recorder.push("start @" + new Date());</script>
 <script src="http://localhost:8888/api/verboser.js?v=1&delay=0"></script>
 <script src="http://localhost:8888/api/verboser.js?v=2&delay=2000"></script>
 <script src="http://localhost:8888/api/verboser.js?v=3&delay=1000"></script>
@@ -113,6 +113,28 @@
                 this.expanded = !this.expanded;
             }
         }
+    };
+
+    const Redirect = {
+      template: `
+      <div>
+        <button v-on:click="redirectSameOrigin" class="btn btn-primary">Test Redirect (same orign)</button>
+        <button v-on:click="redirectDifferentOrigin" class="btn btn-primary">Test Redirect (different orign)</button>
+      </div>
+      `,
+      data() {
+            return {};
+      },
+      methods: {
+        redirectSameOrigin() {
+          window.location.href = "/";
+          alert("I will block the redirection due to same redirected origin");
+        },
+        redirectDifferentOrigin() {
+          window.location.href = "https://google.com";
+          alert("I will not block the redirection due to different redirected origin");
+        },
+      }
     };
 
     const Main = {
@@ -280,11 +302,16 @@
 
     Vue.component("Minifier", Minifier);
     Vue.component("Main", Main);
+    Vue.component("Redirect", Redirect)
 
     const routes = [
         {
             path: "/",
             component: Main,
+        },
+        {
+            path: "/redirect",
+            component: Redirect,
         }
     ];
 
@@ -318,6 +345,11 @@
         //         }
         //     });
         // }
+        window.dispatchEvent(new CustomEvent("lala", { detail: "cant hear me" }));
+        window.addEventListener("lala", (event) => {
+          console.log(event);
+        });
+        window.dispatchEvent(new CustomEvent("lala", { detail: "can hear me" }));
     });
 
     $(document).ready(function () {
@@ -327,7 +359,7 @@
     });
 
     function hideSpinner() {
-        document.getElementById('spinner').style.display = 'none';
+        document.getElementById('overlay').remove();
     }
 
 </script>
