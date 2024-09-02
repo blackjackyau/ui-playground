@@ -46,3 +46,11 @@ Document Ready @ Sun Aug 08 2021 22:28:54
    - inclusive of http redirection E.g. `localhost:8888 -> redirection.com[different origin] (return 302 to localhost:8888[same origin)` will be treated as same origin handling.
    - this technique is used in `oidc-client-js` to perform signout redirect, code from promise will be executed if the redirected url is the same origin 
 - if the redirect url is different origin, it will interrupt whenever the redirection is ready
+
+## Cross Origin Test
+- Hosting an Angular build project with other Origin ( acting like CDN ), with localhost:8080. Running a main app with localhost:8888 which essentially just with the `index.html``. 
+- Changing the basehref to locahost:8080 to resolve all the script reference
+- UI renders well, but unfortunately encounters error on the browser navigation control due to cross origin protection. URL with App path is NOT able to render well
+```
+Unhandled Navigation Error: SecurityError: Failed to execute 'replaceState' on 'History': A history state object with URL 'http://localhost:8080/' cannot be created in a document with origin 'http://localhost:8888' and URL 'http://localhost:8888/'.
+```
